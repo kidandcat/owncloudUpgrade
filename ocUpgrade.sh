@@ -27,6 +27,11 @@ function backupFolder {
   fi
 }
 
+function replaceVersion {
+  LINEVERSION=`grep -n "version" owncloud/config/config.php | cut -f1 -d:`
+  sed -i "$LINEVERSIONs/.*/'version' => '$NEWVERSION'/" owncloud/config/config.php
+}
+
 function doExit {
   unprotectData
   exit $1;
@@ -67,6 +72,8 @@ function Upgrade80 {
   unzip owncloud-8.1.8.zip
   rm owncloud-8.1.8.zip
   cp $BACKUPFOLD/config/config.php owncloud/config/config.php
+  NEWVERSION=`sed '3q;d' owncloud/version.php`
+  NEWVERSION=${VERSION:21:3}
   chown www-data:www-data owncloud -R
   chmod +x owncloud/occ
   cd owncloud
@@ -90,6 +97,8 @@ function Upgrade81 {
   unzip owncloud-8.2.5.zip
   rm owncloud-8.2.5.zip
   cp owncloud.old/config/config.php owncloud/config/config.php
+  NEWVERSION=`sed '3q;d' owncloud/version.php`
+  NEWVERSION=${VERSION:21:3}
   chown www-data:www-data owncloud -R
   chmod +x owncloud/occ
   cd owncloud
@@ -113,6 +122,8 @@ function Upgrade82 {
   unzip owncloud-9.0.2.zip
   rm owncloud-9.0.2.zip
   cp owncloud.old/config/config.php owncloud/config/config.php
+  NEWVERSION=`sed '3q;d' owncloud/version.php`
+  NEWVERSION=${VERSION:21:3}
   chown www-data:www-data owncloud -R
   echo "La version >9.0.x es compatible con php7.0"
   chmod +x owncloud/occ
